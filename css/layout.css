@@ -1,0 +1,154 @@
+/* ==========================================================================
+   THE PRINT LOOM — Layout
+   ========================================================================== */
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+.section {
+  padding-block: var(--space-9);
+}
+
+.section--tight { padding-block: var(--space-7); }
+
+.grid {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+@media (max-width: 1024px) {
+  .grid-4 { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 768px) {
+  .grid-3, .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .grid-2 { grid-template-columns: 1fr; gap: var(--space-8); }
+}
+@media (max-width: 480px) {
+  .grid-3, .grid-4 { grid-template-columns: 1fr; }
+}
+
+.stack { display: flex; flex-direction: column; }
+.row { display: flex; align-items: center; }
+.row-between { display: flex; align-items: center; justify-content: space-between; }
+.row-wrap { display: flex; flex-wrap: wrap; }
+
+/* ---- Signature element: the "zari line" ----------------------------------
+   A thin woven-thread divider referencing the gold zari border found on the
+   edge of a handloom saree. Used between major sections instead of a plain
+   hairline rule. */
+.zari-line {
+  --dot: 6px;
+  height: 1px;
+  width: 100%;
+  position: relative;
+  background: linear-gradient(90deg, transparent, var(--color-border-strong) 12%, var(--color-border-strong) 88%, transparent);
+}
+.zari-line::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--color-gold) 1.4px, transparent 1.6px);
+  background-size: 14px 100%;
+  background-position: center;
+  opacity: 0.85;
+}
+
+/* ---- Site header ---- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  background: var(--overlay-glass);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.site-header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+}
+
+.nav-primary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+@media (max-width: 900px) {
+  .nav-primary { display: none; }
+}
+
+/* ---- Footer ---- */
+.site-footer {
+  background: var(--color-maroon);
+  color: var(--color-on-maroon);
+  padding-block: var(--space-9) var(--space-6);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+  gap: var(--space-7);
+}
+
+@media (max-width: 900px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 560px) {
+  .footer-grid { grid-template-columns: 1fr; }
+}
+
+.footer-bottom {
+  margin-top: var(--space-8);
+  padding-top: var(--space-5);
+  border-top: 1px solid rgba(246, 236, 228, 0.18);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  font-size: var(--fs-body-xs);
+  color: rgba(246, 236, 228, 0.72);
+}
+
+/* ---- Page shell used on every page ---- */
+.page-main { min-height: 60vh; }
+
+.breadcrumbs {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  font-size: var(--fs-body-xs);
+  color: var(--color-ink-faint);
+  padding-block: var(--space-5);
+}
+
+/* ---- Two column layouts (PDP, checkout) ---- */
+.split-layout {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: var(--space-8);
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .split-layout { grid-template-columns: 1fr; }
+}

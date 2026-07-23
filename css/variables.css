@@ -1,0 +1,118 @@
+/* ==========================================================================
+   THE PRINT LOOM — Design Tokens
+   Palette inspired by handloom sarees: ivory silk, oxblood maroon, antique
+   zari gold, and a muted rose used sparingly for warmth.
+   ========================================================================== */
+
+:root {
+  /* ---- Color: Surfaces ---- */
+  --color-white:        #FEFCFA;
+  --color-ivory:        #FBF7F1;
+  --color-cream:        #F3E9DA;
+  --color-cream-dark:   #E8D9C0;
+
+  /* ---- Color: Brand ---- */
+  --color-maroon:        #5E1120;
+  --color-maroon-dark:   #400B16;
+  --color-maroon-light:  #7A2534;
+  --color-gold:          #AD8A4E;
+  --color-gold-light:    #D4B876;
+  --color-gold-dark:     #8C6E37;
+  --color-rose:          #A9645A;
+
+  /* ---- Color: Text ---- */
+  --color-ink:           #2A1F1D;
+  --color-ink-soft:      #5C4E49;
+  --color-ink-faint:     #8B7C76;
+  --color-on-maroon:     #F6ECE4;
+
+  /* ---- Color: Feedback ---- */
+  --color-success:       #3F7A4E;
+  --color-error:         #A3372B;
+  --color-warning:       #B4801F;
+  --color-info:          #3E6E8E;
+
+  /* ---- Color: Borders / Dividers ---- */
+  --color-border:        #E7DCCC;
+  --color-border-strong: #D8C6A8;
+
+  /* ---- Overlays ---- */
+  --overlay-scrim:        rgba(42, 31, 29, 0.55);
+  --overlay-glass:        rgba(254, 252, 250, 0.66);
+
+  /* ---- Typography ---- */
+  --font-display: "Playfair Display", "Georgia", serif;
+  --font-body:    "Poppins", "Helvetica Neue", Arial, sans-serif;
+
+  --fs-display-xl: clamp(2.6rem, 5vw + 1rem, 4.8rem);
+  --fs-display-lg: clamp(2.1rem, 3.4vw + 1rem, 3.4rem);
+  --fs-display-md: clamp(1.6rem, 2vw + 1rem, 2.4rem);
+  --fs-display-sm: clamp(1.3rem, 1.2vw + 1rem, 1.7rem);
+
+  --fs-body-lg:   1.125rem;
+  --fs-body-md:   1rem;
+  --fs-body-sm:   0.875rem;
+  --fs-body-xs:   0.75rem;
+
+  --lh-tight:  1.15;
+  --lh-snug:   1.35;
+  --lh-normal: 1.6;
+
+  --ls-eyebrow: 0.16em;
+
+  /* ---- Spacing scale (4px base) ---- */
+  --space-1:  0.25rem;
+  --space-2:  0.5rem;
+  --space-3:  0.75rem;
+  --space-4:  1rem;
+  --space-5:  1.5rem;
+  --space-6:  2rem;
+  --space-7:  3rem;
+  --space-8:  4rem;
+  --space-9:  6rem;
+  --space-10: 8rem;
+
+  /* ---- Radius ---- */
+  --radius-sm: 6px;
+  --radius-md: 14px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+
+  /* ---- Shadow ---- */
+  --shadow-sm: 0 2px 8px rgba(64, 11, 22, 0.06);
+  --shadow-md: 0 10px 30px rgba(64, 11, 22, 0.10);
+  --shadow-lg: 0 24px 60px rgba(64, 11, 22, 0.16);
+  --shadow-gold: 0 8px 24px rgba(173, 138, 78, 0.28);
+
+  /* ---- Motion ---- */
+  --ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 160ms;
+  --dur-base: 280ms;
+  --dur-slow: 520ms;
+
+  /* ---- Layout ---- */
+  --container-max: 1280px;
+  --container-pad: clamp(1.25rem, 4vw, 3rem);
+  --header-height: 76px;
+  --z-header: 100;
+  --z-modal: 300;
+  --z-toast: 400;
+  --z-drawer: 250;
+}
+
+/* Dark mode overrides — deep maroon-black ground, gold stays the constant */
+:root[data-theme="dark"] {
+  --color-white:        #1B1210;
+  --color-ivory:        #211613;
+  --color-cream:        #2A1D18;
+  --color-cream-dark:   #362520;
+
+  --color-ink:           #F3E9DC;
+  --color-ink-soft:      #D8C6BB;
+  --color-ink-faint:     #9C8B84;
+
+  --color-border:        #3A2A24;
+  --color-border-strong: #4A362E;
+
+  --overlay-glass:        rgba(27, 18, 16, 0.66);
+}

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Confirmed — The Print Loom</title>
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://theprintloom.example.com/pages/order-success/index.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/variables.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/css/layout.css">
+<link rel="stylesheet" href="/css/components.css">
+<link rel="stylesheet" href="/css/pages.css">
+<link rel="stylesheet" href="/css/animations.css">
+<link rel="stylesheet" href="/css/utilities.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<main id="main-content" class="page-main">
+  <div class="container">
+    <div class="order-success">
+      <div class="order-success__icon reveal">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="96" height="96"><circle cx="12" cy="12" r="10"/><path d="M8 12.5l2.5 2.5L16 9"/></svg>
+      </div>
+      <p class="eyebrow reveal">Thank you</p>
+      <h1 class="reveal">Your Order is Confirmed!</h1>
+      <p class="text-soft mt-3 reveal" id="order-message">We're preparing your saree with care.</p>
+      <div class="order-id-box reveal" id="order-id-display">—</div>
+      <p class="text-faint reveal" id="order-payment-note"></p>
+      <div class="hero__actions reveal" style="justify-content:center;">
+        <a href="/index.html" class="btn btn-outline">Continue Shopping</a>
+        <a href="/pages/profile/index.html" class="btn btn-primary">Track Order</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script type="module">
+  import { initApp } from '/js/app.js';
+  import { CONFIG } from '/js/services/config.js';
+  import { storage } from '/js/services/storage.js';
+
+  const lastOrder = storage.get(CONFIG.STORAGE_KEYS.lastOrder, null);
+
+  if (lastOrder) {
+    document.getElementById('order-id-display').textContent = lastOrder.orderId;
+    document.getElementById('order-message').textContent = `Thank you, ${lastOrder.name}! A confirmation has been sent to our team and you'll receive updates via WhatsApp.`;
+    document.getElementById('order-payment-note').textContent = lastOrder.paymentMethod === 'cod'
+      ? `Please keep ${CONFIG.BUSINESS.currency}${lastOrder.grandTotal.toLocaleString('en-IN')} ready for Cash on Delivery.`
+      : `Payment of ${CONFIG.BUSINESS.currency}${lastOrder.grandTotal.toLocaleString('en-IN')} was received successfully.`;
+  } else {
+    document.getElementById('order-message').textContent = "We couldn't find a recent order in this session.";
+  }
+
+  await initApp();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Collections — The Print Loom</title>
+<meta name="description" content="Browse all digital print sarees — silk, georgette, linen, organza, cotton and the bridal edit — from The Print Loom.">
+<link rel="canonical" href="https://theprintloom.example.com/pages/collections/index.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/variables.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/css/layout.css">
+<link rel="stylesheet" href="/css/components.css">
+<link rel="stylesheet" href="/css/pages.css">
+<link rel="stylesheet" href="/css/animations.css">
+<link rel="stylesheet" href="/css/utilities.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<main id="main-content" class="page-main">
+  <div class="container">
+    <nav class="breadcrumbs"><a href="/index.html">Home</a> / <span id="breadcrumb-current">Collections</span></nav>
+  </div>
+
+  <section class="container section--tight">
+    <h1 id="listing-title">All Sarees</h1>
+    <p class="text-soft mt-2" id="listing-subtitle">Browse our full digital print saree edit.</p>
+
+    <div class="listing-layout mt-7">
+      <aside class="filter-panel">
+        <div class="filter-group">
+          <h4>Category</h4>
+          <div id="filter-categories"></div>
+        </div>
+        <div class="filter-group">
+          <h4>Fabric</h4>
+          <div id="filter-fabrics"></div>
+        </div>
+        <div class="filter-group">
+          <h4>Price</h4>
+          <div class="stack gap-3">
+            <input type="range" id="filter-price" min="0" max="7000" step="100" value="7000">
+            <span class="text-faint" id="filter-price-label">Up to ₹7,000</span>
+          </div>
+        </div>
+        <button id="filter-clear" class="btn btn-ghost mt-4" style="padding-left:0;">Clear filters</button>
+      </aside>
+
+      <div>
+        <div class="toolbar">
+          <span class="text-faint" id="result-count">Loading…</span>
+          <select id="sort-select" class="form-select" style="width:auto;">
+            <option value="default">Sort: Featured</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="rating">Top Rated</option>
+            <option value="newest">Newest</option>
+          </select>
+        </div>
+        <div id="product-grid" class="grid grid-3"></div>
+        <div id="pagination-root"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+
+<script type="module">
+  import { initApp } from '/js/app.js';
+  import { router } from '/js/router.js';
+  import { products } from '/js/services/products.js';
+  import { mountProductGrid } from '/js/components/productCard.js';
+  import { renderPagination } from '/js/components/pagination.js';
+  import { skeletonProductCards } from '/js/components/loader.js';
+
+  const PAGE_SIZE = 9;
+  let allProducts = [];
+  let categories = [];
+  let state = {
+    categories: router.param('category') ? [router.param('category')] : [],
+    fabrics: [],
+    maxPrice: 7000,
+    sort: 'default',
+    page: 1,
+  };
+
+  document.getElementById('product-grid').innerHTML = skeletonProductCards(6);
+
+  function applyAndRender() {
+    let list = products.filter(allProducts, {
+      categories: state.categories,
+      fabrics: state.fabrics,
+      maxPrice: state.maxPrice,
+    });
+    list = products.sort(list, state.sort);
+
+    document.getElementById('result-count').textContent = `${list.length} saree${list.length === 1 ? '' : 's'}`;
+
+    const start = (state.page - 1) * PAGE_SIZE;
+    const pageItems = list.slice(start, start + PAGE_SIZE);
+    mountProductGrid(document.getElementById('product-grid'), pageItems);
+
+    renderPagination(document.getElementById('pagination-root'), {
+      totalItems: list.length,
+      pageSize: PAGE_SIZE,
+      currentPage: state.page,
+      onChange: (p) => { state.page = p; applyAndRender(); window.scrollTo({ top: 0, behavior: 'smooth' }); },
+    });
+  }
+
+  function renderCategoryFilters() {
+    document.getElementById('filter-categories').innerHTML = categories.map((c) => `
+      <label class="filter-option">
+        <input type="checkbox" value="${c.id}" ${state.categories.includes(c.id) ? 'checked' : ''}> ${c.name}
+      </label>
+    `).join('');
+    document.querySelectorAll('#filter-categories input').forEach((cb) => {
+      cb.addEventListener('change', () => {
+        state.categories = [...document.querySelectorAll('#filter-categories input:checked')].map((i) => i.value);
+        state.page = 1;
+        applyAndRender();
+      });
+    });
+  }
+
+  function renderFabricFilters() {
+    const fabrics = [...new Set(allProducts.map((p) => p.fabric))];
+    document.getElementById('filter-fabrics').innerHTML = fabrics.map((f) => `
+      <label class="filter-option"><input type="checkbox" value="${f}"> ${f}</label>
+    `).join('');
+    document.querySelectorAll('#filter-fabrics input').forEach((cb) => {
+      cb.addEventListener('change', () => {
+        state.fabrics = [...document.querySelectorAll('#filter-fabrics input:checked')].map((i) => i.value);
+        state.page = 1;
+        applyAndRender();
+      });
+    });
+  }
+
+  document.getElementById('filter-price').addEventListener('input', (e) => {
+    state.maxPrice = Number(e.target.value);
+    document.getElementById('filter-price-label').textContent = `Up to ₹${state.maxPrice.toLocaleString('en-IN')}`;
+    state.page = 1;
+    applyAndRender();
+  });
+
+  document.getElementById('sort-select').addEventListener('change', (e) => {
+    state.sort = e.target.value;
+    applyAndRender();
+  });
+
+  document.getElementById('filter-clear').addEventListener('click', () => {
+    state = { categories: [], fabrics: [], maxPrice: 7000, sort: 'default', page: 1 };
+    document.getElementById('filter-price').value = 7000;
+    document.getElementById('filter-price-label').textContent = 'Up to ₹7,000';
+    document.getElementById('sort-select').value = 'default';
+    renderCategoryFilters();
+    renderFabricFilters();
+    applyAndRender();
+  });
+
+  async function init() {
+    await initApp();
+    [allProducts, categories] = await Promise.all([products.all(), products.categories()]);
+
+    const categoryParam = router.param('category');
+    if (categoryParam) {
+      const cat = categories.find((c) => c.id === categoryParam);
+      if (cat) {
+        document.getElementById('listing-title').textContent = cat.name;
+        document.getElementById('listing-subtitle').textContent = cat.description;
+        document.getElementById('breadcrumb-current').textContent = cat.name;
+      }
+    }
+
+    renderCategoryFilters();
+    renderFabricFilters();
+    applyAndRender();
+  }
+
+  init();
+</script>
+
+</body>
+</html>

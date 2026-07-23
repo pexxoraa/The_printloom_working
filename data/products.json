@@ -1,0 +1,116 @@
+{
+  "products": [
+    {
+      "id": "p001", "name": "Maroon Zari Bloom Digital Silk Saree", "slug": "maroon-zari-bloom-digital-silk-saree",
+      "category": "cat-silk", "price": 3499, "discount": 20,
+      "images": ["https://picsum.photos/seed/ploom-p001-a/800/1000","https://picsum.photos/seed/ploom-p001-b/800/1000","https://picsum.photos/seed/ploom-p001-c/800/1000"],
+      "fabric": "Digital Print Silk", "sizes": ["Free Size"], "stock": 18, "featured": true,
+      "tags": ["bestseller","festive"], "rating": 4.7,
+      "description": "A rich oxblood-maroon digital silk saree with an antique gold zari-style border, printed in a hand-painted floral bloom motif. Comes with an unstitched blouse piece."
+    },
+    {
+      "id": "p002", "name": "Ivory Paisley Georgette Saree", "slug": "ivory-paisley-georgette-saree",
+      "category": "cat-georgette", "price": 2299, "discount": 15,
+      "images": ["https://picsum.photos/seed/ploom-p002-a/800/1000","https://picsum.photos/seed/ploom-p002-b/800/1000"],
+      "fabric": "Digital Print Georgette", "sizes": ["Free Size"], "stock": 24, "featured": true,
+      "tags": ["new-arrival"], "rating": 4.5,
+      "description": "A flowing ivory georgette saree with a delicate paisley trail, finished with a gold-tone lace border for a soft daytime festive look."
+    },
+    {
+      "id": "p003", "name": "Sunflower Yellow Linen Saree", "slug": "sunflower-yellow-linen-saree",
+      "category": "cat-linen", "price": 1899, "discount": 10,
+      "images": ["https://picsum.photos/seed/ploom-p003-a/800/1000","https://picsum.photos/seed/ploom-p003-b/800/1000"],
+      "fabric": "Digital Print Linen", "sizes": ["Free Size"], "stock": 30, "featured": false,
+      "tags": ["everyday","new-arrival"], "rating": 4.3,
+      "description": "A breathable linen saree in sunny yellow with a woven-look ikat print, designed for effortless everyday elegance."
+    },
+    {
+      "id": "p004", "name": "Emerald Bandhani Organza Saree", "slug": "emerald-bandhani-organza-saree",
+      "category": "cat-organza", "price": 2799, "discount": 0,
+      "images": ["https://picsum.photos/seed/ploom-p004-a/800/1000","https://picsum.photos/seed/ploom-p004-b/800/1000","https://picsum.photos/seed/ploom-p004-c/800/1000"],
+      "fabric": "Digital Print Organza", "sizes": ["Free Size"], "stock": 12, "featured": true,
+      "tags": ["trending"], "rating": 4.8,
+      "description": "A sheer emerald organza saree printed with a classic bandhani-inspired dot pattern and a structured satin border."
+    },
+    {
+      "id": "p005", "name": "Blush Pink Floral Cotton Saree", "slug": "blush-pink-floral-cotton-saree",
+      "category": "cat-cotton", "price": 1499, "discount": 12,
+      "images": ["https://picsum.photos/seed/ploom-p005-a/800/1000","https://picsum.photos/seed/ploom-p005-b/800/1000"],
+      "fabric": "Digital Print Cotton", "sizes": ["Free Size"], "stock": 40, "featured": false,
+      "tags": ["everyday","bestseller"], "rating": 4.4,
+      "description": "A soft blush pink cotton saree with a scattered floral print, perfect for daily wear and light office festivities."
+    },
+    {
+      "id": "p006", "name": "Royal Blue Bridal Kanjivaram-Style Silk Saree", "slug": "royal-blue-bridal-kanjivaram-style-silk-saree",
+      "category": "cat-bridal", "price": 5999, "discount": 18,
+      "images": ["https://picsum.photos/seed/ploom-p006-a/800/1000","https://picsum.photos/seed/ploom-p006-b/800/1000","https://picsum.photos/seed/ploom-p006-c/800/1000"],
+      "fabric": "Digital Print Silk", "sizes": ["Free Size"], "stock": 8, "featured": true,
+      "tags": ["bridal","bestseller"], "rating": 4.9,
+      "description": "A statement royal blue silk saree in a Kanjivaram-inspired temple border print, woven with a rich gold pallu design for weddings."
+    },
+    {
+      "id": "p007", "name": "Mustard Ikat Print Linen Saree", "slug": "mustard-ikat-print-linen-saree",
+      "category": "cat-linen", "price": 1999, "discount": 0,
+      "images": ["https://picsum.photos/seed/ploom-p007-a/800/1000","https://picsum.photos/seed/ploom-p007-b/800/1000"],
+      "fabric": "Digital Print Linen", "sizes": ["Free Size"], "stock": 22, "featured": false,
+      "tags": ["new-arrival"], "rating": 4.2,
+      "description": "A textured mustard linen saree with a geometric ikat print, styled with a contrast maroon border."
+    },
+    {
+      "id": "p008", "name": "Coral Chinnon Digital Print Saree", "slug": "coral-chinnon-digital-print-saree",
+      "category": "cat-georgette", "price": 2099, "discount": 8,
+      "images": ["https://picsum.photos/seed/ploom-p008-a/800/1000","https://picsum.photos/seed/ploom-p008-b/800/1000"],
+      "fabric": "Digital Print Chinnon Georgette", "sizes": ["Free Size"], "stock": 26, "featured": false,
+      "tags": ["trending"], "rating": 4.3,
+      "description": "A coral chinnon saree with a watercolour-style abstract print and a soft fall for effortless drape."
+    },
+    {
+      "id": "p009", "name": "Charcoal Grey Zari Border Organza Saree", "slug": "charcoal-grey-zari-border-organza-saree",
+      "category": "cat-organza", "price": 2599, "discount": 5,
+      "images": ["https://picsum.photos/seed/ploom-p009-a/800/1000","https://picsum.photos/seed/ploom-p009-b/800/1000"],
+      "fabric": "Digital Print Organza", "sizes": ["Free Size"], "stock": 15, "featured": false,
+      "tags": ["new-arrival"], "rating": 4.1,
+      "description": "A refined charcoal grey organza saree finished with a wide gold zari-style border, ideal for evening events."
+    },
+    {
+      "id": "p010", "name": "Rani Pink Bridal Silk Saree", "slug": "rani-pink-bridal-silk-saree",
+      "category": "cat-bridal", "price": 6499, "discount": 22,
+      "images": ["https://picsum.photos/seed/ploom-p010-a/800/1000","https://picsum.photos/seed/ploom-p010-b/800/1000","https://picsum.photos/seed/ploom-p010-c/800/1000"],
+      "fabric": "Digital Print Silk", "sizes": ["Free Size"], "stock": 6, "featured": true,
+      "tags": ["bridal","trending"], "rating": 4.8,
+      "description": "A vivid rani-pink bridal silk saree with an intricate temple-motif pallu and dense gold-tone detailing throughout."
+    },
+    {
+      "id": "p011", "name": "Sea Green Handloom-Look Cotton Saree", "slug": "sea-green-handloom-look-cotton-saree",
+      "category": "cat-cotton", "price": 1699, "discount": 10,
+      "images": ["https://picsum.photos/seed/ploom-p011-a/800/1000","https://picsum.photos/seed/ploom-p011-b/800/1000"],
+      "fabric": "Digital Print Cotton", "sizes": ["Free Size"], "stock": 35, "featured": false,
+      "tags": ["everyday"], "rating": 4.0,
+      "description": "A sea-green cotton saree replicating a handloom check weave, printed digitally for a crisp, breathable everyday drape."
+    },
+    {
+      "id": "p012", "name": "Wine Ombre Digital Silk Saree", "slug": "wine-ombre-digital-silk-saree",
+      "category": "cat-silk", "price": 3899, "discount": 15,
+      "images": ["https://picsum.photos/seed/ploom-p012-a/800/1000","https://picsum.photos/seed/ploom-p012-b/800/1000"],
+      "fabric": "Digital Print Silk", "sizes": ["Free Size"], "stock": 14, "featured": true,
+      "tags": ["trending","festive"], "rating": 4.6,
+      "description": "A wine-to-blush ombre silk saree with a printed floral vine border, designed to catch the light beautifully at festive gatherings."
+    },
+    {
+      "id": "p013", "name": "Powder Blue Chanderi-Style Cotton Saree", "slug": "powder-blue-chanderi-style-cotton-saree",
+      "category": "cat-cotton", "price": 1799, "discount": 0,
+      "images": ["https://picsum.photos/seed/ploom-p013-a/800/1000","https://picsum.photos/seed/ploom-p013-b/800/1000"],
+      "fabric": "Digital Print Cotton", "sizes": ["Free Size"], "stock": 28, "featured": false,
+      "tags": ["new-arrival"], "rating": 4.2,
+      "description": "A powder-blue cotton saree with a fine Chanderi-inspired sheen print and a delicate silver-tone border."
+    },
+    {
+      "id": "p014", "name": "Deep Teal Peacock Motif Organza Saree", "slug": "deep-teal-peacock-motif-organza-saree",
+      "category": "cat-organza", "price": 2999, "discount": 12,
+      "images": ["https://picsum.photos/seed/ploom-p014-a/800/1000","https://picsum.photos/seed/ploom-p014-b/800/1000","https://picsum.photos/seed/ploom-p014-c/800/1000"],
+      "fabric": "Digital Print Organza", "sizes": ["Free Size"], "stock": 10, "featured": true,
+      "tags": ["bestseller","festive"], "rating": 4.7,
+      "description": "A deep teal organza saree with an intricately printed peacock feather motif pallu, bordered in antique gold."
+    }
+  ]
+}

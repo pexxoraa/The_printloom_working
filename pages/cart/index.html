@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Cart — The Print Loom</title>
+<meta name="description" content="Review your saree selections before checkout.">
+<link rel="canonical" href="https://theprintloom.example.com/pages/cart/index.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/variables.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/css/layout.css">
+<link rel="stylesheet" href="/css/components.css">
+<link rel="stylesheet" href="/css/pages.css">
+<link rel="stylesheet" href="/css/animations.css">
+<link rel="stylesheet" href="/css/utilities.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<main id="main-content" class="page-main">
+  <div class="container">
+    <nav class="breadcrumbs"><a href="/index.html">Home</a> / <span>Cart</span></nav>
+    <h1>Your Bag</h1>
+
+    <div class="split-layout mt-6" id="cart-layout">
+      <div id="cart-lines"></div>
+
+      <div class="order-summary" id="cart-summary" style="display:none;">
+        <h3>Order Summary</h3>
+        <div class="coupon-row">
+          <input type="text" id="coupon-input" class="form-input" placeholder="Coupon code">
+          <button id="coupon-apply" class="btn btn-outline">Apply</button>
+        </div>
+        <p id="coupon-message" class="form-error"></p>
+        <div class="summary-row"><span>Subtotal</span><span id="summary-subtotal"></span></div>
+        <div class="summary-row"><span>Shipping</span><span id="summary-shipping"></span></div>
+        <div class="summary-row"><span>Discount</span><span id="summary-discount">−₹0</span></div>
+        <div class="summary-row total"><span>Grand Total</span><span id="summary-total"></span></div>
+        <a href="/pages/checkout/index.html" class="btn btn-primary btn-block mt-5">Proceed to Checkout</a>
+        <a href="/pages/collections/index.html" class="btn btn-ghost btn-block mt-2">Continue Shopping</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script type="module">
+  import { initApp } from '/js/app.js';
+  import { cart } from '/js/services/cart.js';
+  import { CONFIG } from '/js/services/config.js';
+  import { showToast } from '/js/components/toast.js';
+
+  function currency(n) { return `${CONFIG.BUSINESS.currency}${Math.round(n).toLocaleString('en-IN')}`; }
+
+  let appliedCoupon = null;
+
+  const COUPONS = {
+    WELCOME10: { type: 'percent', value: 10, minOrder: 999 },
+    FLAT200: { type: 'flat', value: 200, minOrder: 2500 },
+  };
+
+  function computeDiscount(subtotal) {
+    if (!appliedCoupon) return 0;
+    if (subtotal < appliedCoupon.minOrder) return 0;
+    return appliedCoupon.type === 'percent'
+      ? Math.round(subtotal * (appliedCoupon.value / 100))
+      : appliedCoupon.value;
+  }
+
+  async function render() {
+    const lines = await cart.hydrate();
+    const linesRoot = document.getElementById('cart-lines');
+    const summaryRoot = document.getElementById('cart-summary');
+
+    if (!lines.length) {
+      linesRoot.innerHTML = `
+        <div class="empty-state">
+          <h3>Your bag is empty</h3>
+          <p class="mt-2">Explore our collections to find your next favourite saree.</p>
+          <a href="/pages/collections/index.html" class="btn btn-primary mt-5">Shop Collections</a>
+        </div>`;
+      summaryRoot.style.display = 'none';
+      return;
+    }
+
+    summaryRoot.style.display = 'block';
+    linesRoot.innerHTML = lines.map((l) => `
+      <div class="cart-line" data-product="${l.productId}" data-size="${l.size}">
+        <div class="cart-line__media"><img src="${l.product.images[0]}" alt="${l.product.name}"></div>
+        <div>
+          <a href="/pages/product/index.html?slug=${l.product.slug}" style="font-weight:600;">${l.product.name}</a>
+          <p class="text-faint mt-1" style="font-size:0.85rem;">${l.size} · ${l.product.fabric}</p>
+          <button class="cart-line__remove" data-remove>Remove</button>
+        </div>
+        <div class="cart-line__qty qty-stepper">
+          <button type="button" data-qty-minus>−</button>
+          <input type="number" value="${l.quantity}" min="1" max="10" data-qty-input>
+          <button type="button" data-qty-plus>+</button>
+        </div>
+        <div class="cart-line__total" style="font-weight:600;">${currency(l.lineTotal)}</div>
+      </div>
+    `).join('');
+
+    wireLineEvents();
+    await updateTotals();
+  }
+
+  function wireLineEvents() {
+    document.querySelectorAll('.cart-line').forEach((line) => {
+      const productId = line.dataset.product;
+      const size = line.dataset.size;
+      const input = line.querySelector('[data-qty-input]');
+
+      line.querySelector('[data-qty-minus]').addEventListener('click', async () => {
+        const val = Math.max(1, Number(input.value) - 1);
+        input.value = val;
+        cart.updateQuantity(productId, size, val);
+        await render();
+      });
+      line.querySelector('[data-qty-plus]').addEventListener('click', async () => {
+        const val = Math.min(10, Number(input.value) + 1);
+        input.value = val;
+        cart.updateQuantity(productId, size, val);
+        await render();
+      });
+      input.addEventListener('change', async () => {
+        cart.updateQuantity(productId, size, Math.max(1, Number(input.value)));
+        await render();
+      });
+      line.querySelector('[data-remove]').addEventListener('click', async () => {
+        cart.removeItem(productId, size);
+        showToast('Removed from cart', 'info');
+        await render();
+      });
+    });
+  }
+
+  async function updateTotals() {
+    const lines = await cart.hydrate();
+    const subtotal = lines.reduce((s, l) => s + l.lineTotal, 0);
+    const discount = computeDiscount(subtotal);
+    const totals = await cart.totals(discount);
+
+    document.getElementById('summary-subtotal').textContent = currency(totals.subtotal);
+    document.getElementById('summary-shipping').textContent = totals.shipping === 0 ? 'Free' : currency(totals.shipping);
+    document.getElementById('summary-discount').textContent = `−${currency(totals.discount)}`;
+    document.getElementById('summary-total').textContent = currency(totals.grandTotal);
+  }
+
+  document.getElementById('coupon-apply').addEventListener('click', async () => {
+    const code = document.getElementById('coupon-input').value.trim().toUpperCase();
+    const msg = document.getElementById('coupon-message');
+    const coupon = COUPONS[code];
+    if (!coupon) {
+      msg.textContent = 'Invalid coupon code.';
+      appliedCoupon = null;
+    } else {
+      appliedCoupon = coupon;
+      msg.style.color = 'var(--color-success)';
+      msg.textContent = `Coupon applied! (min. order ${currency(coupon.minOrder)})`;
+    }
+    await updateTotals();
+  });
+
+  window.addEventListener('cart:change', render);
+
+  await initApp();
+  await render();
+</script>
+
+</body>
+</html>

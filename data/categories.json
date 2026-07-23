@@ -1,0 +1,10 @@
+{
+  "categories": [
+    { "id": "cat-silk", "name": "Digital Silk Sarees", "slug": "digital-silk-sarees", "image": "https://picsum.photos/seed/ploom-cat-silk/400/400", "description": "Rich silk-finish sarees with vivid digitally printed motifs." },
+    { "id": "cat-georgette", "name": "Georgette Sarees", "slug": "georgette-sarees", "image": "https://picsum.photos/seed/ploom-cat-georgette/400/400", "description": "Fluid, lightweight drape ideal for festive daywear." },
+    { "id": "cat-linen", "name": "Linen Sarees", "slug": "linen-sarees", "image": "https://picsum.photos/seed/ploom-cat-linen/400/400", "description": "Breathable handloom-style linen for everyday elegance." },
+    { "id": "cat-organza", "name": "Organza Sarees", "slug": "organza-sarees", "image": "https://picsum.photos/seed/ploom-cat-organza/400/400", "description": "Sheer, structured organza with fine zari borders." },
+    { "id": "cat-cotton", "name": "Cotton Sarees", "slug": "cotton-sarees", "image": "https://picsum.photos/seed/ploom-cat-cotton/400/400", "description": "Soft everyday cottons in modern printed patterns." },
+    { "id": "cat-bridal", "name": "Bridal Edit", "slug": "bridal-edit", "image": "https://picsum.photos/seed/ploom-cat-bridal/400/400", "description": "Statement pieces for weddings and receptions." }
+  ]
+}

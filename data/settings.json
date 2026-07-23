@@ -1,0 +1,35 @@
+{
+  "brand": {
+    "name": "The Print Loom",
+    "tagline": "Handloom Soul. Digital Precision.",
+    "logo": "/assets/images/logo.svg",
+    "supportPhone": "+91 90000 00000",
+    "supportWhatsapp": "+91 90000 00000",
+    "supportEmail": "hello@theprintloom.in",
+    "address": "Ahmedabad, Gujarat, India"
+  },
+  "social": {
+    "instagram": "https://instagram.com/theprintloom",
+    "facebook": "https://facebook.com/theprintloom",
+    "pinterest": "https://pinterest.com/theprintloom"
+  },
+  "shipping": {
+    "freeShippingThreshold": 2000,
+    "flatRate": 79,
+    "codAvailable": true,
+    "estimatedDeliveryDays": "4-7"
+  },
+  "coupons": [
+    { "code": "WELCOME10", "type": "percent", "value": 10, "minOrder": 999 },
+    { "code": "FLAT200", "type": "flat", "value": 200, "minOrder": 2500 }
+  ],
+  "payment": {
+    "razorpayKeyId": "rzp_test_XXXXXXXXXXXX",
+    "methods": ["cod", "online"]
+  },
+  "seo": {
+    "defaultTitle": "The Print Loom — Digital Print Sarees",
+    "defaultDescription": "Shop premium digital print sarees — silk, georgette, linen, organza and cotton — crafted for the modern Indian woman.",
+    "siteUrl": "https://theprintloom.example.com"
+  }
+}

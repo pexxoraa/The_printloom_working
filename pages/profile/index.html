@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Track Your Order — The Print Loom</title>
+<meta name="description" content="Look up your Print Loom order status using your Order ID and phone number.">
+<link rel="canonical" href="https://theprintloom.example.com/pages/profile/index.html">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/variables.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/css/layout.css">
+<link rel="stylesheet" href="/css/components.css">
+<link rel="stylesheet" href="/css/pages.css">
+<link rel="stylesheet" href="/css/animations.css">
+<link rel="stylesheet" href="/css/utilities.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<main id="main-content" class="page-main">
+  <div class="container" style="max-width:640px;">
+    <nav class="breadcrumbs"><a href="/index.html">Home</a> / <span>Track Order</span></nav>
+    <h1>Track Your Order</h1>
+    <p class="text-soft mt-2">The Print Loom uses guest checkout only — no account needed. Enter your Order ID and the phone number used at checkout to check your order status.</p>
+
+    <form id="track-form" class="mt-6" novalidate>
+      <div class="form-group">
+        <label class="form-label" for="track-order-id">Order ID</label>
+        <input type="text" id="track-order-id" class="form-input" placeholder="e.g. PL-20260722-0001" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="track-phone">Phone Number</label>
+        <input type="tel" id="track-phone" class="form-input" placeholder="10-digit mobile number" required>
+        <span class="form-error" data-error-for="phone"></span>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Check Status</button>
+    </form>
+
+    <div id="track-result" class="mt-6"></div>
+
+    <div class="zari-line mt-8 mb-8"></div>
+
+    <div id="last-order-panel"></div>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script type="module">
+  import { initApp } from '/js/app.js';
+  import { validators } from '/js/services/validation.js';
+  import { CONFIG } from '/js/services/config.js';
+  import { storage } from '/js/services/storage.js';
+  import { showToast } from '/js/components/toast.js';
+
+  function renderLastOrder() {
+    const lastOrder = storage.get(CONFIG.STORAGE_KEYS.lastOrder, null);
+    const panel = document.getElementById('last-order-panel');
+    if (!lastOrder) { panel.innerHTML = ''; return; }
+    panel.innerHTML = `
+      <h3>Your Most Recent Order</h3>
+      <div class="card mt-4" style="padding:var(--space-5);">
+        <p><strong>Order ID:</strong> ${lastOrder.orderId}</p>
+        <p class="mt-2"><strong>Payment Method:</strong> ${lastOrder.paymentMethod === 'cod' ? 'Cash on Delivery' : 'Online Payment'}</p>
+        <p class="mt-2"><strong>Amount:</strong> ${CONFIG.BUSINESS.currency}${lastOrder.grandTotal.toLocaleString('en-IN')}</p>
+      </div>
+    `;
+  }
+
+  document.getElementById('track-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const orderId = document.getElementById('track-order-id').value.trim();
+    const phone = document.getElementById('track-phone').value.trim();
+    const phoneError = validators.phone(phone);
+    const errEl = document.querySelector('[data-error-for="phone"]');
+    errEl.textContent = phoneError || '';
+    if (phoneError || !orderId) return;
+
+    // NOTE: Order lookup requires a backend endpoint (e.g. `getOrderStatus`)
+    // on the Google Apps Script API — see /backend/Code.gs for where to add
+    // it once your Google Sheet is connected. This UI is wired and ready.
+    document.getElementById('track-result').innerHTML = `
+      <div class="empty-state">
+        <p>Order lookup will be live once the backend is connected. For urgent order queries, please reach us on WhatsApp from the Contact page.</p>
+      </div>`;
+    showToast('Backend not yet connected — see Contact page for order queries.', 'info');
+  });
+
+  await initApp();
+  renderLastOrder();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Page Not Found — The Print Loom</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/variables.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/css/layout.css">
+<link rel="stylesheet" href="/css/components.css">
+<link rel="stylesheet" href="/css/pages.css">
+<link rel="stylesheet" href="/css/animations.css">
+<link rel="stylesheet" href="/css/utilities.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<main id="main-content" class="page-main">
+  <div class="container">
+    <div class="error-page">
+      <div class="big reveal">404</div>
+      <h2 class="mt-4 reveal">This page has slipped off the loom</h2>
+      <p class="text-soft mt-3 reveal">The page you're looking for doesn't exist or may have moved.</p>
+      <div class="hero__actions reveal" style="justify-content:center;">
+        <a href="/index.html" class="btn btn-primary">Back to Home</a>
+        <a href="/pages/collections/index.html" class="btn btn-outline">Shop Collections</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script type="module">
+  import { initApp } from '/js/app.js';
+  await initApp();
+</script>
+
+</body>
+</html>

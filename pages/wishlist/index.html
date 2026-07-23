@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Wishlist — The Print Loom</title>
+<meta name="description" content="Your saved sarees at The Print Loom.">
+<link rel="canonical" href="https://theprintloom.example.com/pages/wishlist/index.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/variables.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/css/layout.css">
+<link rel="stylesheet" href="/css/components.css">
+<link rel="stylesheet" href="/css/pages.css">
+<link rel="stylesheet" href="/css/animations.css">
+<link rel="stylesheet" href="/css/utilities.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<main id="main-content" class="page-main">
+  <div class="container">
+    <nav class="breadcrumbs"><a href="/index.html">Home</a> / <span>Wishlist</span></nav>
+    <h1>Your Wishlist</h1>
+    <p class="text-soft mt-2">Sarees you've saved for later.</p>
+    <div id="wishlist-grid" class="grid grid-4 mt-6"></div>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script type="module">
+  import { initApp } from '/js/app.js';
+  import { wishlist } from '/js/services/wishlist.js';
+  import { mountProductGrid } from '/js/components/productCard.js';
+
+  async function render() {
+    const items = await wishlist.hydrate();
+    const grid = document.getElementById('wishlist-grid');
+    if (!items.length) {
+      grid.innerHTML = `
+        <div class="empty-state" style="grid-column:1/-1;">
+          <h3>Your wishlist is empty</h3>
+          <p class="mt-2">Tap the heart icon on any saree to save it here.</p>
+          <a href="/pages/collections/index.html" class="btn btn-primary mt-5">Browse Collections</a>
+        </div>`;
+      return;
+    }
+    mountProductGrid(grid, items);
+  }
+
+  window.addEventListener('wishlist:change', render);
+  await initApp();
+  await render();
+</script>
+
+</body>
+</html>

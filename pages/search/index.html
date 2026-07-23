@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Search — The Print Loom</title>
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://theprintloom.example.com/pages/search/index.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/variables.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/css/layout.css">
+<link rel="stylesheet" href="/css/components.css">
+<link rel="stylesheet" href="/css/pages.css">
+<link rel="stylesheet" href="/css/animations.css">
+<link rel="stylesheet" href="/css/utilities.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<main id="main-content" class="page-main">
+  <div class="container">
+    <nav class="breadcrumbs"><a href="/index.html">Home</a> / <span>Search</span></nav>
+    <h1>Search Results</h1>
+
+    <div class="form-group mt-5" style="max-width:480px;">
+      <input type="search" id="search-page-input" class="form-input" placeholder="Search sarees, fabrics, colours...">
+    </div>
+
+    <div class="toolbar mt-4">
+      <span class="text-faint" id="search-result-count"></span>
+      <select id="search-sort" class="form-select" style="width:auto;">
+        <option value="default">Sort: Relevance</option>
+        <option value="price-asc">Price: Low to High</option>
+        <option value="price-desc">Price: High to Low</option>
+        <option value="rating">Top Rated</option>
+      </select>
+    </div>
+
+    <div id="search-grid" class="grid grid-3 mt-3"></div>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script type="module">
+  import { initApp } from '/js/app.js';
+  import { router } from '/js/router.js';
+  import { products } from '/js/services/products.js';
+  import { mountProductGrid } from '/js/components/productCard.js';
+
+  const input = document.getElementById('search-page-input');
+  const sortSelect = document.getElementById('search-sort');
+  let results = [];
+
+  async function runSearch(q) {
+    results = await products.search(q);
+    renderResults();
+  }
+
+  function renderResults() {
+    const sorted = products.sort(results, sortSelect.value);
+    document.getElementById('search-result-count').textContent =
+      `${sorted.length} result${sorted.length === 1 ? '' : 's'} for "${input.value.trim()}"`;
+    mountProductGrid(document.getElementById('search-grid'), sorted);
+  }
+
+  let debounce;
+  input.addEventListener('input', () => {
+    clearTimeout(debounce);
+    router.setParams({ q: input.value.trim() || null });
+    debounce = setTimeout(() => runSearch(input.value.trim()), 250);
+  });
+  sortSelect.addEventListener('change', renderResults);
+
+  await initApp();
+  const initialQuery = router.param('q', '');
+  input.value = initialQuery;
+  if (initialQuery) await runSearch(initialQuery);
+  else document.getElementById('search-result-count').textContent = 'Start typing to search our full saree collection.';
+</script>
+
+</body>
+</html>

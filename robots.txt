@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /pages/checkout/
+Disallow: /pages/cart/
+Disallow: /pages/order-success/
+Disallow: /pages/profile/
+Disallow: /pages/search/
+
+Sitemap: https://theprintloom.example.com/sitemap.xml

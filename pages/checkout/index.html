@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout — The Print Loom</title>
+<meta name="description" content="Complete your guest checkout at The Print Loom.">
+<link rel="canonical" href="https://theprintloom.example.com/pages/checkout/index.html">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/variables.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/css/layout.css">
+<link rel="stylesheet" href="/css/components.css">
+<link rel="stylesheet" href="/css/pages.css">
+<link rel="stylesheet" href="/css/animations.css">
+<link rel="stylesheet" href="/css/utilities.css">
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<main id="main-content" class="page-main">
+  <div class="container">
+    <nav class="breadcrumbs"><a href="/index.html">Home</a> / <a href="/pages/cart/index.html">Cart</a> / <span>Checkout</span></nav>
+    <h1>Checkout</h1>
+
+    <div class="checkout-steps mt-6">
+      <div class="checkout-step is-active">1. Details</div>
+      <div class="checkout-step">2. Payment</div>
+      <div class="checkout-step">3. Confirmation</div>
+    </div>
+
+    <div class="split-layout" id="checkout-layout">
+      <div>
+        <h3>Customer Information</h3>
+        <form id="checkout-form" class="mt-5" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="cf-name">Full Name</label>
+            <input type="text" id="cf-name" class="form-input" required>
+            <span class="form-error" data-error-for="name"></span>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="cf-phone">Phone Number</label>
+              <input type="tel" id="cf-phone" class="form-input" required>
+              <span class="form-error" data-error-for="phone"></span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="cf-email">Email</label>
+              <input type="email" id="cf-email" class="form-input" required>
+              <span class="form-error" data-error-for="email"></span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="cf-address">Address</label>
+            <textarea id="cf-address" class="form-textarea" rows="3" required></textarea>
+            <span class="form-error" data-error-for="address"></span>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="cf-city">City</label>
+              <input type="text" id="cf-city" class="form-input" required>
+              <span class="form-error" data-error-for="city"></span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="cf-state">State</label>
+              <input type="text" id="cf-state" class="form-input" required>
+              <span class="form-error" data-error-for="state"></span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="cf-pincode">Pincode</label>
+            <input type="text" id="cf-pincode" class="form-input" maxlength="6" required>
+            <span class="form-error" data-error-for="pincode"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="cf-notes">Order Notes (optional)</label>
+            <textarea id="cf-notes" class="form-textarea" rows="2" placeholder="Delivery instructions, gifting note, etc."></textarea>
+          </div>
+
+          <h3 class="mt-7">Payment Method</h3>
+          <div class="mt-4">
+            <label class="payment-option is-selected">
+              <input type="radio" name="payment-method" value="cod" checked>
+              <div><strong>Cash on Delivery</strong><p class="text-faint" style="font-size:0.85rem;">Pay in cash when your order arrives.</p></div>
+            </label>
+            <label class="payment-option">
+              <input type="radio" name="payment-method" value="online">
+              <div><strong>Online Payment</strong><p class="text-faint" style="font-size:0.85rem;">Pay securely via Razorpay — cards, UPI, netbanking & wallets.</p></div>
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block mt-7" id="place-order-btn">Place Order</button>
+        </form>
+      </div>
+
+      <div class="order-summary">
+        <h3>Order Summary</h3>
+        <div id="checkout-lines" class="mt-4"></div>
+        <div class="zari-line mt-3 mb-3"></div>
+        <div class="summary-row"><span>Subtotal</span><span id="co-subtotal"></span></div>
+        <div class="summary-row"><span>Shipping</span><span id="co-shipping"></span></div>
+        <div class="summary-row total"><span>Grand Total</span><span id="co-total"></span></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+
+<script type="module">
+  import { initApp } from '/js/app.js';
+  import { cart } from '/js/services/cart.js';
+  import { checkout } from '/js/services/checkout.js';
+  import { payment } from '/js/services/payment.js';
+  import { CONFIG } from '/js/services/config.js';
+  import { storage } from '/js/services/storage.js';
+  import { showToast } from '/js/components/toast.js';
+  import { router } from '/js/router.js';
+
+  function currency(n) { return `${CONFIG.BUSINESS.currency}${Math.round(n).toLocaleString('en-IN')}`; }
+
+  async function renderSummary() {
+    const lines = await cart.hydrate();
+    if (!lines.length) {
+      document.getElementById('checkout-layout').innerHTML = `
+        <div class="empty-state">
+          <h3>Your bag is empty</h3>
+          <p class="mt-2">Add sarees to your bag before checking out.</p>
+          <a href="/pages/collections/index.html" class="btn btn-primary mt-5">Shop Collections</a>
+        </div>`;
+      return false;
+    }
+    document.getElementById('checkout-lines').innerHTML = lines.map((l) => `
+      <div class="mini-cart-line">
+        <img src="${l.product.images[0]}" alt="${l.product.name}">
+        <div class="stack" style="flex:1;">
+          <span style="font-size:0.9rem;font-weight:600;">${l.product.name}</span>
+          <span class="text-faint" style="font-size:0.8rem;">${l.size} × ${l.quantity}</span>
+        </div>
+        <span style="font-weight:600;">${currency(l.lineTotal)}</span>
+      </div>
+    `).join('');
+    const totals = await cart.totals();
+    document.getElementById('co-subtotal').textContent = currency(totals.subtotal);
+    document.getElementById('co-shipping').textContent = totals.shipping === 0 ? 'Free' : currency(totals.shipping);
+    document.getElementById('co-total').textContent = currency(totals.grandTotal);
+    return true;
+  }
+
+  function prefillDraft() {
+    const draft = checkout.getDraft();
+    document.getElementById('cf-name').value = draft.name || '';
+    document.getElementById('cf-phone').value = draft.phone || '';
+    document.getElementById('cf-email').value = draft.email || '';
+    document.getElementById('cf-address').value = draft.address || '';
+    document.getElementById('cf-city').value = draft.city || '';
+    document.getElementById('cf-state').value = draft.state || '';
+    document.getElementById('cf-pincode').value = draft.pincode || '';
+    document.getElementById('cf-notes').value = draft.notes || '';
+  }
+
+  function readForm() {
+    return {
+      name: document.getElementById('cf-name').value,
+      phone: document.getElementById('cf-phone').value,
+      email: document.getElementById('cf-email').value,
+      address: document.getElementById('cf-address').value,
+      city: document.getElementById('cf-city').value,
+      state: document.getElementById('cf-state').value,
+      pincode: document.getElementById('cf-pincode').value,
+      notes: document.getElementById('cf-notes').value,
+    };
+  }
+
+  function showErrors(errors) {
+    document.querySelectorAll('[data-error-for]').forEach((el) => { el.textContent = ''; });
+    document.querySelectorAll('.form-input, .form-textarea').forEach((el) => el.classList.remove('is-invalid'));
+    Object.entries(errors).forEach(([field, message]) => {
+      const el = document.querySelector(`[data-error-for="${field}"]`);
+      if (el) el.textContent = message;
+      const input = document.getElementById(`cf-${field}`);
+      if (input) input.classList.add('is-invalid');
+    });
+  }
+
+  // Persist draft as the user types (checkout draft in localStorage).
+  document.getElementById('checkout-form').addEventListener('input', () => {
+    checkout.saveDraft(readForm());
+  });
+
+  // Payment method visual selection
+  document.querySelectorAll('.payment-option').forEach((opt) => {
+    opt.addEventListener('click', () => {
+      document.querySelectorAll('.payment-option').forEach((o) => o.classList.remove('is-selected'));
+      opt.classList.add('is-selected');
+    });
+  });
+
+  document.getElementById('checkout-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = readForm();
+    const { valid, errors } = checkout.validate(data);
+    showErrors(errors);
+    if (!valid) {
+      showToast('Please fix the highlighted fields.', 'error');
+      return;
+    }
+
+    const paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
+    const submitBtn = document.getElementById('place-order-btn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Placing order…';
+
+    try {
+      const orderDraft = await checkout.buildOrderDraft(data, { paymentMethod });
+      let result;
+      if (paymentMethod === 'cod') {
+        result = await payment.payWithCod(orderDraft);
+      } else {
+        result = await payment.payWithRazorpay(orderDraft, data);
+      }
+
+      storage.set(CONFIG.STORAGE_KEYS.lastOrder, {
+        orderId: result.orderId || result.orderID || 'PL-PENDING',
+        paymentMethod,
+        grandTotal: orderDraft.grandTotal,
+        name: data.name,
+      });
+      cart.clear();
+      checkout.clearDraft();
+      router.go('orderSuccess');
+    } catch (err) {
+      showToast(err.message || 'Something went wrong placing your order.', 'error');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Place Order';
+    }
+  });
+
+  await initApp();
+  prefillDraft();
+  await renderSummary();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="page-title">Product — The Print Loom</title>
+<meta name="description" id="page-description" content="Shop premium digital print sarees at The Print Loom.">
+<link rel="canonical" id="canonical-link" href="https://theprintloom.example.com/pages/product/index.html">
+<meta property="og:type" content="product">
+<meta property="og:title" id="og-title" content="The Print Loom">
+<meta property="og:image" id="og-image" content="">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/variables.css">
+<link rel="stylesheet" href="/css/base.css">
+<link rel="stylesheet" href="/css/layout.css">
+<link rel="stylesheet" href="/css/components.css">
+<link rel="stylesheet" href="/css/pages.css">
+<link rel="stylesheet" href="/css/animations.css">
+<link rel="stylesheet" href="/css/utilities.css">
+<script type="application/ld+json" id="product-schema"></script>
+</head>
+<body>
+
+<div id="site-header"></div>
+
+<main id="main-content" class="page-main">
+  <div class="container">
+    <nav class="breadcrumbs">
+      <a href="/index.html">Home</a> / <a href="/pages/collections/index.html">Collections</a> / <span id="breadcrumb-product">Product</span>
+    </nav>
+  </div>
+
+  <section class="container section--tight" id="pdp-root">
+    <div class="split-layout">
+      <div class="pdp-gallery">
+        <div class="pdp-gallery__main">
+          <img id="gallery-main-img" src="" alt="">
+        </div>
+        <div class="pdp-gallery__thumbs" id="gallery-thumbs"></div>
+      </div>
+
+      <div class="pdp-info">
+        <p class="eyebrow" id="pdp-fabric"></p>
+        <h1 id="pdp-name"></h1>
+        <div class="product-card__rating mt-2">
+          <span class="stars" id="pdp-stars"></span> <span id="pdp-rating"></span>
+        </div>
+        <div class="pdp-price">
+          <span class="current" id="pdp-price-current"></span>
+          <span class="original" id="pdp-price-original"></span>
+          <span class="discount-tag" id="pdp-discount-tag" style="display:none;"></span>
+        </div>
+        <div class="pdp-stock" id="pdp-stock"><span class="dot"></span><span id="pdp-stock-text"></span></div>
+
+        <p class="text-soft" id="pdp-description"></p>
+
+        <div class="pdp-actions">
+          <div class="qty-stepper">
+            <button type="button" id="qty-minus" aria-label="Decrease quantity">−</button>
+            <input type="number" id="qty-input" value="1" min="1" max="10" aria-label="Quantity">
+            <button type="button" id="qty-plus" aria-label="Increase quantity">+</button>
+          </div>
+          <button class="btn btn-outline" id="add-to-cart-btn">Add to Cart</button>
+          <button class="btn btn-primary" id="buy-now-btn">Buy Now</button>
+          <button class="btn-icon" id="pdp-wishlist-btn" aria-label="Toggle wishlist">♡</button>
+        </div>
+
+        <div class="pdp-share">
+          <span class="text-faint" style="align-self:center;">Share:</span>
+          <button class="btn-icon" id="share-copy" aria-label="Copy link">⎘</button>
+          <a class="btn-icon" id="share-whatsapp" href="#" target="_blank" rel="noopener" aria-label="Share on WhatsApp">↗</a>
+        </div>
+
+        <div class="pdp-tabs">
+          <button class="pdp-tab is-active" data-tab="details">Fabric & Care</button>
+          <button class="pdp-tab" data-tab="delivery">Delivery</button>
+          <button class="pdp-tab" data-tab="returns">Returns</button>
+        </div>
+        <div class="pdp-tab-panel is-active" data-panel="details">
+          <p id="pdp-fabric-detail"></p>
+          <p class="mt-3"><strong>Care instructions:</strong> Dry clean recommended for first wash. Gentle hand wash in cold water for subsequent washes. Do not bleach. Iron on low heat, reverse side.</p>
+        </div>
+        <div class="pdp-tab-panel" data-panel="delivery">
+          <p>Estimated delivery: 4–7 business days across India. Free shipping on orders above ₹2,000; a flat ₹79 shipping fee applies below that.</p>
+        </div>
+        <div class="pdp-tab-panel" data-panel="returns">
+          <p>7-day easy return window from the date of delivery, provided the saree is unworn and unwashed with original tags intact.</p>
+        </div>
+      </div>
+    </div>
+
+    <section class="section">
+      <div class="section-head">
+        <div><p class="eyebrow">You may also like</p><h2>Related Sarees</h2></div>
+      </div>
+      <div id="related-grid" class="grid grid-4"></div>
+    </section>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+
+<script type="module">
+  import { initApp } from '/js/app.js';
+  import { router } from '/js/router.js';
+  import { products } from '/js/services/products.js';
+  import { cart } from '/js/services/cart.js';
+  import { wishlist } from '/js/services/wishlist.js';
+  import { mountProductGrid } from '/js/components/productCard.js';
+  import { showToast } from '/js/components/toast.js';
+  import { CONFIG } from '/js/services/config.js';
+  import { storage } from '/js/services/storage.js';
+
+  const RV_KEY = CONFIG.STORAGE_KEYS.recentlyViewed;
+
+  function trackRecentlyViewed(productId) {
+    let ids = storage.get(RV_KEY, []);
+    ids = [productId, ...ids.filter((id) => id !== productId)].slice(0, CONFIG.BUSINESS.recentlyViewedLimit);
+    storage.set(RV_KEY, ids);
+  }
+
+  function setActiveImage(src, thumbs) {
+    document.getElementById('gallery-main-img').src = src;
+    thumbs.forEach((t) => t.classList.toggle('is-active', t.dataset.src === src));
+  }
+
+  function currency(n) { return `${CONFIG.BUSINESS.currency}${n.toLocaleString('en-IN')}`; }
+
+  async function init() {
+    await initApp();
+
+    const slug = router.param('slug');
+    const product = slug ? await products.getBySlug(slug) : null;
+
+    if (!product) {
+      document.getElementById('pdp-root').innerHTML = `
+        <div class="empty-state">
+          <h3>We couldn't find that saree</h3>
+          <p class="mt-2">It may have sold out or the link may be incorrect.</p>
+          <a href="/pages/collections/index.html" class="btn btn-primary mt-5">Browse Collections</a>
+        </div>`;
+      return;
+    }
+
+    trackRecentlyViewed(product.id);
+
+    const finalPrice = products.finalPrice(product);
+
+    document.getElementById('page-title').textContent = `${product.name} — The Print Loom`;
+    document.getElementById('page-description').content = product.description;
+    document.getElementById('canonical-link').href = `https://theprintloom.example.com/pages/product/index.html?slug=${product.slug}`;
+    document.getElementById('og-title').content = product.name;
+    document.getElementById('og-image').content = product.images[0];
+    document.getElementById('breadcrumb-product').textContent = product.name;
+
+    document.getElementById('product-schema').textContent = JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: product.name,
+      image: product.images,
+      description: product.description,
+      offers: {
+        '@type': 'Offer',
+        priceCurrency: 'INR',
+        price: finalPrice,
+        availability: product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+      },
+      aggregateRating: { '@type': 'AggregateRating', ratingValue: product.rating, reviewCount: 24 },
+    });
+
+    document.getElementById('pdp-fabric').textContent = product.fabric;
+    document.getElementById('pdp-name').textContent = product.name;
+    document.getElementById('pdp-stars').textContent = '★'.repeat(Math.round(product.rating));
+    document.getElementById('pdp-rating').textContent = `${product.rating} rating`;
+    document.getElementById('pdp-price-current').textContent = currency(finalPrice);
+    document.getElementById('pdp-description').textContent = product.description;
+    document.getElementById('pdp-fabric-detail').innerHTML = `<strong>Fabric:</strong> ${product.fabric}. <strong>Available sizes:</strong> ${product.sizes.join(', ')}.`;
+
+    if (product.discount) {
+      document.getElementById('pdp-price-original').textContent = currency(product.price);
+      const tag = document.getElementById('pdp-discount-tag');
+      tag.style.display = 'inline-flex';
+      tag.textContent = `${product.discount}% OFF`;
+    }
+
+    const stockEl = document.getElementById('pdp-stock');
+    const stockText = document.getElementById('pdp-stock-text');
+    if (product.stock > 0) {
+      stockText.textContent = product.stock <= 5 ? `Only ${product.stock} left in stock` : 'In Stock';
+    } else {
+      stockEl.classList.add('out');
+      stockText.textContent = 'Out of Stock';
+      document.getElementById('add-to-cart-btn').disabled = true;
+      document.getElementById('buy-now-btn').disabled = true;
+    }
+
+    // Gallery
+    const thumbsRoot = document.getElementById('gallery-thumbs');
+    thumbsRoot.innerHTML = product.images.map((src, i) => `<img src="${src}" data-src="${src}" alt="${product.name} view ${i + 1}" class="${i === 0 ? 'is-active' : ''}">`).join('');
+    document.getElementById('gallery-main-img').src = product.images[0];
+    document.getElementById('gallery-main-img').alt = product.name;
+    const thumbs = [...thumbsRoot.querySelectorAll('img')];
+    thumbs.forEach((t) => t.addEventListener('click', () => setActiveImage(t.dataset.src, thumbs)));
+
+    // Zoom on mouse move (desktop only)
+    const mainMedia = document.querySelector('.pdp-gallery__main');
+    const mainImg = document.getElementById('gallery-main-img');
+    mainMedia.addEventListener('mousemove', (e) => {
+      const rect = mainMedia.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      mainImg.style.transformOrigin = `${x}% ${y}%`;
+      mainImg.style.transform = 'scale(1.8)';
+    });
+    mainMedia.addEventListener('mouseleave', () => { mainImg.style.transform = 'scale(1)'; });
+
+    // Quantity
+    const qtyInput = document.getElementById('qty-input');
+    document.getElementById('qty-minus').addEventListener('click', () => { qtyInput.value = Math.max(1, Number(qtyInput.value) - 1); });
+    document.getElementById('qty-plus').addEventListener('click', () => { qtyInput.value = Math.min(10, Number(qtyInput.value) + 1); });
+
+    // Wishlist
+    const wishBtn = document.getElementById('pdp-wishlist-btn');
+    const syncWish = () => { wishBtn.textContent = wishlist.has(product.id) ? '♥' : '♡'; wishBtn.classList.toggle('is-active', wishlist.has(product.id)); };
+    syncWish();
+    wishBtn.addEventListener('click', () => { wishlist.toggle(product.id); syncWish(); showToast('Wishlist updated', 'success'); });
+
+    // Add to cart / Buy now
+    document.getElementById('add-to-cart-btn').addEventListener('click', async () => {
+      await cart.addItem(product.id, Number(qtyInput.value));
+      showToast('Added to cart', 'success');
+    });
+    document.getElementById('buy-now-btn').addEventListener('click', async () => {
+      await cart.addItem(product.id, Number(qtyInput.value));
+      router.go('checkout');
+    });
+
+    // Share
+    document.getElementById('share-copy').addEventListener('click', async () => {
+      await navigator.clipboard.writeText(window.location.href);
+      showToast('Link copied to clipboard', 'success');
+    });
+    document.getElementById('share-whatsapp').href = `https://wa.me/?text=${encodeURIComponent(`${product.name} — ${window.location.href}`)}`;
+
+    // Tabs
+    document.querySelectorAll('.pdp-tab').forEach((tab) => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.pdp-tab').forEach((t) => t.classList.remove('is-active'));
+        document.querySelectorAll('.pdp-tab-panel').forEach((p) => p.classList.remove('is-active'));
+        tab.classList.add('is-active');
+        document.querySelector(`[data-panel="${tab.dataset.tab}"]`).classList.add('is-active');
+      });
+    });
+
+    // Related products
+    const related = await products.related(product, 4);
+    mountProductGrid(document.getElementById('related-grid'), related);
+  }
+
+  init();
+</script>
+
+</body>
+</html>
